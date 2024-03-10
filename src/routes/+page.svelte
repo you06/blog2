@@ -1,12 +1,6 @@
-<h1>Welcome to Blog2</h1>
-
-{#each data.posts as post}
-<div>
-    <a href='./post/{post.id}'>This is {post.id}</a>
-</div>
-{/each}
+<div style="position: fixed;left: 0;top: 0;background: url('{data.background.url}'); background-size: cover; height:100%;width:100%"/>
 
 <script>
 	/** @type {import('./$types').PageData} */
-	export let data;
+	export let data
 </script>

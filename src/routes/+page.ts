@@ -1,5 +1,8 @@
+import { request } from '$lib/endpoint'
+
 /** @type {import('./$types').PageLoad} */
-export function load({}) {
+export async function load({}) {
+    const background_resp = await request('background')
 	return {
 		posts: [
             {id: 'post-1'},
@@ -9,6 +12,7 @@ export function load({}) {
             {id: 'post-5'},
             {id: 'post-6'},
             {id: 'post-7'},
-        ]
+        ],
+        background: background_resp.rows[0]
 	};
 }
