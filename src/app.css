@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    @font-face {
+        font-family: BigBlueTerm;
+        font-weight: 400;
+        src: url(/fonts/BigBlueTerm/BigBlueTerm437NerdFont-Regular.ttf) format("truetype");
+    }
+}
