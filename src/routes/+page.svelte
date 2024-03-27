@@ -1,6 +1,6 @@
 <title>Center</title>
 
-<div class="background" style="background: url('{data.background.url}') 50% 50% / cover;">
+<div class="background" style="background-image: url('{data.background.url}');">
 	<div class="text-center font-bold home-title font-big-blue-term font-shadow">
 		<p class="text-3xl">Welcome to you06's Home.</p>
 		<p class="text-2xl">this page exhibits my photography, refresh to show another.</p>
@@ -26,6 +26,9 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		background-position: 50% 50%;
+		background-size: cover;
+		background-color: #666;
 	}
 
 	.home-title {
