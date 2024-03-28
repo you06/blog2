@@ -4,6 +4,7 @@ import { request } from '$lib/endpoint'
 export async function load({}) {
     const background_resp = await request('background')
 	return {
-        background: background_resp.rows[0]
-	};
+        background1: background_resp.rows[0],
+        background2: background_resp.rows[0],
+	}
 }

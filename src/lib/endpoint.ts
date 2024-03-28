@@ -4,7 +4,7 @@ const ENDPOINT_ROOT: string = 'https://ap-northeast-1.data.tidbcloud.com/api/v1b
 const USERNAME: string = 'K13PSIV0'
 const PASSWORD: string = 'c3872e69-297c-451f-bb27-184dff738f28'
 
-let request = async (path: string, params?: {[key: string]: string}) => {
+let request = async (path: string, params?: {[key: string]: any}) => {
     const url = ENDPOINT_ROOT + path;
     try {
         const response = await axios.get(url, {
