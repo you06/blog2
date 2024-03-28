@@ -63,8 +63,8 @@
 						nowSwitchBackground = 'background1'
 					}
 					onloadRandomBackground = false
-				}, 500)
-				image.remove()
+					image.remove()
+				}, 200)
 			})
 			image.src = resp.rows[0].url
 		}).catch(function (err) {
