@@ -1,15 +1,19 @@
 <title>Center</title>
 
-<div id="background1" class="background"
-	class:background-display={nowSwitchBackground === 'background1'}
-	class:background-hidden={nowSwitchBackground === 'background1'}
-	style="background-image: url('{data.background1.url}');">
-</div>
-<div
-	id="background2" class="background"
-	class:background-display={nowSwitchBackground !== 'background2'}
-	class:background-hidden={nowSwitchBackground === 'background2'}
-	style="background-image: url('{data.background2.url}');">
+<div class="background-background">
+	<div id="background1" class="background"
+		class:background-show={background1Show}
+		class:background-display={background1Display}
+		class:background-hidden={!background1Display}>
+		<img src="{data.background1.url}" alt="{data.background1.description}" class="background-cover-image" use:onloadBackgound id="background1-img"/>
+	</div>
+	<div
+		id="background2" class="background"
+		class:background-show={background2Show}
+		class:background-display={background2Display}
+		class:background-hidden={!background2Display}>
+		<img src="{data.background2.url}" alt="{data.background2.description}" class="background-cover-image" use:onloadBackgound id="background2-img"/>
+	</div>
 </div>
 
 <div class="text-content text-center font-bold font-big-blue-term font-shadow home-title auto-hidden">
@@ -36,37 +40,69 @@
 	/** @type {import('./$types').PageData} */
 	export let data
 
+	const debug = false
 	let onloadRandomBackground = false
 	let nowSwitchBackground = 'background2'
+	let background1Display = true
+	let background2Display = false
+	let background1Show = false
+	let background2Show = false
+
+	function onloadBackgound(el) {
+		let init = true
+		el.addEventListener('load', () => {
+			if (debug) {
+				console.log(`background loaded: ${el.id} ${el.src}`)
+			}
+			// ignore first event
+			if (init) {
+				init = false
+				return
+			}
+			let one2two = nowSwitchBackground === 'background2'
+			if (one2two) {
+				nowSwitchBackground = 'background1'
+				background2Show = true
+			} else {
+				nowSwitchBackground = 'background2'
+				background1Show = true
+			}
+
+			setTimeout(() => {
+				if (one2two) {
+					background1Display = false
+					background2Display = true
+					background2Show = false
+				} else {
+					background2Display = false
+					background1Display = true
+					background1Show = false
+				}
+				onloadRandomBackground = false
+			}, 750)
+		})
+	}
 
 	function loadNewBackground() {
 		if (onloadRandomBackground) {
 			return
 		}
 		onloadRandomBackground = true
+		if (debug) {
+			console.log(`trigger load new background`, `["${data.background1.url}", "${data.background2.url}"]`)
+		}
 		request('background', {
-			bypass_urls: [data.background1.url, data.background2.url]
+			bypass_url1: data.background1.url,
+			bypass_url2: data.background2.url
 		}).then(function (resp) {
-			console.log(`load new background: ${resp.rows[0].url}`)
-			let image = new Image();
-			image.addEventListener('load', function() {
-				if (nowSwitchBackground === 'background1') {
-					data.background1 = resp.rows[0]
-				} else {
-					data.background2 = resp.rows[0]
-				}
-
-				setTimeout(function() {
-					if (nowSwitchBackground === 'background1') {
-						nowSwitchBackground = 'background2'
-					} else {
-						nowSwitchBackground = 'background1'
-					}
-					onloadRandomBackground = false
-					image.remove()
-				}, 200)
-			})
-			image.src = resp.rows[0].url
+			if (debug) {
+				console.log(`load new background: ${resp.rows[0].url}`)
+			}
+			if (nowSwitchBackground === 'background1') {
+				data.background1 = resp.rows[0]
+			} else {
+				data.background2 = resp.rows[0]
+			}
 		}).catch(function (err) {
 			console.error(err)
 			onloadRandomBackground = false
@@ -90,7 +126,23 @@
 		align-items: center;
 		background-position: 50% 50%;
 		background-size: cover;
+		z-index: 150;
+		opacity: 0;
+	}
+
+	.background-background {
+		position: fixed;
+		left: 0;
+		top: 0;
+		height:100%;
+		width:100%;
 		background-color: #666;
+	}
+
+	.background-cover-image {
+		height: 100%;
+		width: 100%;
+		object-fit: cover;
 	}
 
 	.photo-controller {
@@ -163,6 +215,13 @@
 
 	.background-display {
 		z-index: 200;
+		opacity: 1;
+	}
+
+	.background-show {
+		z-index: 201 !important;
+		-webkit-animation: showAnimation 0.7s forwards; 
+		animation: showAnimation 0.7s forwards;
 	}
 
 	.background-hidden {
