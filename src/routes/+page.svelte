@@ -5,14 +5,14 @@
 		class:background-show={background1Show}
 		class:background-display={background1Display}
 		class:background-hidden={!background1Display}>
-		<img src="{data.background1.url}" alt="{data.background1.description}" class="background-cover-image" use:onloadBackgound id="background1-img"/>
+		<img src="{data.background1.url}" alt="{data.background1.description}" class="background-image background-image-{imageFitMode}" use:onloadBackgound id="background1-img"/>
 	</div>
 	<div
 		id="background2" class="background"
 		class:background-show={background2Show}
 		class:background-display={background2Display}
 		class:background-hidden={!background2Display}>
-		<img src="{data.background2.url}" alt="{data.background2.description}" class="background-cover-image" use:onloadBackgound id="background2-img"/>
+		<img src="{data.background2.url}" alt="{data.background2.description}" class="background-image background-image-{imageFitMode}" use:onloadBackgound id="background2-img"/>
 	</div>
 </div>
 
@@ -29,16 +29,32 @@
 		<button type="button" class="photo-controller-icon inline-icon icon-shadow" on:click={loadNewBackground}>
 			<Fa icon={faChevronRight} />
 		</button>
+		<button type="button" class="photo-controller-icon inline-icon icon-shadow" on:click={changeFitMode}>
+			{#if imageFitMode === 'cover'}
+				<Fa icon={faDownLeftAndUpRightToCenter} />
+			{:else}
+				<Fa icon={faUpRightAndDownLeftFromCenter} />
+			{/if}
+		</button>
 	</div>
 </div>
 
 <script>
 	import Fa from 'svelte-fa'
-	import { faChevronRight } from '@fortawesome/free-solid-svg-icons'
+	import { faChevronRight, faDownLeftAndUpRightToCenter, faUpRightAndDownLeftFromCenter } from '@fortawesome/free-solid-svg-icons'
 	import { request } from '$lib/endpoint'
 
 	/** @type {import('./$types').PageData} */
 	export let data
+
+	let imageFitMode = 'cover'
+	function changeFitMode() {
+		if (imageFitMode === 'cover') {
+			imageFitMode = 'contain'
+		} else {
+			imageFitMode = 'cover'
+		}
+	}
 
 	const debug = false
 	let onloadRandomBackground = false
@@ -79,7 +95,7 @@
 					background1Show = false
 				}
 				onloadRandomBackground = false
-			}, 750)
+			}, 710)
 		})
 	}
 
@@ -136,13 +152,20 @@
 		top: 0;
 		height:100%;
 		width:100%;
-		background-color: #666;
+		background-color: #030303;
 	}
 
-	.background-cover-image {
+	.background-image {
 		height: 100%;
 		width: 100%;
+	}
+
+	.background-image-cover {
 		object-fit: cover;
+	}
+
+	.background-image-contain {
+		object-fit: contain;
 	}
 
 	.photo-controller {
@@ -153,9 +176,10 @@
 	}
 
 	.photo-controller-icon {
-		font-size: 4em;
+		font-size: 3em;
 		cursor: pointer;
 		color: #fff;
+		padding: 0 0.25em;
 	}
 
 	.inline-icon {
@@ -177,6 +201,10 @@
 	.icon-shadow {
 		-webkit-filter: drop-shadow(0px 0px 10px rgba(16, 16, 16, 1));
 		filter: drop-shadow(0px 0px 10px rgba(16, 16, 16, 1));
+	}
+
+	.icon-little-small {
+
 	}
 
 	.auto-hidden {
